@@ -1,6 +1,6 @@
 #include <vulkan/vulkan.h>
 #include <GLFW/glfw3.h>
-#include "underdog_vulkan.hpp"
+#include "vulkan_support.hpp"
 
 Underdog::Underdog()
 {

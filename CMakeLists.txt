@@ -40,8 +40,8 @@ FetchContent_MakeAvailable(glfw)
 # Добавление исполняемого файла
 add_executable(${PROJECT_NAME}
     src/main.cpp
-    src/underdog_vulkan.cpp
-    include/underdog_vulkan.hpp
+    src/vulkan_support.cpp
+    include/vulkan_support.hpp
 )
 
 # Copy shaders to build directory

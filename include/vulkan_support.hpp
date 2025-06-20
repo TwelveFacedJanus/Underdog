@@ -10,6 +10,7 @@
 #include <set>
 #include <fstream>
 #include <sstream>
+#include "components.hpp"
 
 const std::vector<const char*> validation_layers = {
     "VK_LAYER_KHRONOS_validation"
@@ -68,6 +69,9 @@ private:
     VkSemaphore imageAvailableSemaphore;
     VkSemaphore renderFinishedSemaphore;
     VkFence inFlightFence;
+
+public:
+    std::vector<std::shared_ptr<Component>> components;
     
 private:
     void initialize_glfw();
@@ -111,4 +115,8 @@ public:
     Underdog();
     void mainLoop();
     ~Underdog();
+
+    // Методы для компонентов
+    void drawRect();
+    void drawTriangle();
 };

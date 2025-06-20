@@ -42,6 +42,7 @@ add_executable(${PROJECT_NAME}
     src/main.cpp
     src/vulkan_support.cpp
     include/vulkan_support.hpp
+    include/components.hpp
 )
 
 # Copy shaders to build directory

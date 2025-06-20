@@ -18,6 +18,12 @@ Underdog::Underdog()
     this->create_command_pool();
     this->createCommandBuffer();
     this->createSyncObjects();
+
+    // Создание компонентов
+    auto rect = std::make_shared<Rect>("rect1");
+    auto triangle = std::make_shared<Triangle>("triangle1");
+    rect->addChild(triangle);
+    this->components.push_back(rect);
 }
 
 Underdog::~Underdog()
@@ -94,7 +100,6 @@ void Underdog::mainLoop() {
         glfwPollEvents();
         drawFrame();
     }
-
     vkDeviceWaitIdle(device);
 }
 
@@ -198,9 +203,12 @@ void Underdog::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t image
 
     vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-    vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
-
-    vkCmdDraw(commandBuffer, 3, 1, 0, 0);
+    // vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+    // vkCmdDraw(commandBuffer, 5, 1, 0, 0);
+    // Вместо этого рендерим все компоненты
+    for (auto& component : components) {
+        component->render(*this);
+    }
 
     vkCmdEndRenderPass(commandBuffer);
 
@@ -568,7 +576,7 @@ void Underdog::create_graphics_pipeline()
 
     VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
     inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-    inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+    inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
     inputAssembly.primitiveRestartEnable = VK_FALSE;
 
     VkViewport viewport{};
@@ -894,4 +902,14 @@ VKAPI_ATTR VkBool32 VKAPI_CALL Underdog::debug_callback(
     std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
 
     return VK_FALSE;
+}
+
+void Underdog::drawRect() {
+    vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+    vkCmdDraw(commandBuffer, 4, 1, 0, 0);
+}
+
+void Underdog::drawTriangle() {
+    vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+    vkCmdDraw(commandBuffer, 3, 1, 0, 0);
 }
